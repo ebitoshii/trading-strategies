@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>151 Trading Strategies</title>
+<style>
+:root{--navy:#1E2761;--ndk:#0D1340;--ice:#CADBFC;--gold:#E8A020;--bg:#F4F6FF;--white:#fff;--text:#1A1A2E;--muted:#64749B;--bdr:#DDE3F5;--green:#1a9e5c;--red:#C0392B;--teal:#028090}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+#hdr{background:var(--ndk);display:flex;align-items:center;gap:14px;padding:0 22px;height:52px;position:sticky;top:0;z-index:99;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+#logo{font-size:1.05rem;font-weight:700;color:#fff;white-space:nowrap}
+#logo span{color:var(--gold)}
+#sw{position:relative;flex:1;max-width:360px}
+#sw input{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:7px 12px 7px 30px;color:#fff;font-size:.84rem;outline:none;font-family:inherit}
+#sw input::placeholder{color:rgba(255,255,255,.38)}
+#sw input:focus{border-color:var(--gold)}
+#si{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.38);pointer-events:none;font-size:.82rem}
+#sr{display:none;position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--ndk);border:1px solid rgba(255,255,255,.12);border-radius:9px;max-height:300px;overflow-y:auto;z-index:200}
+#sr.vis{display:block}
+.ri{padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06)}
+.ri:hover{background:rgba(255,255,255,.07)}
+.rn{font-size:.82rem;color:#fff;font-weight:500}
+.rc{font-size:.7rem;color:var(--ice);margin-top:1px}
+#lay{display:flex;max-width:1340px;margin:0 auto;min-height:calc(100vh - 52px)}
+#sb{width:262px;flex-shrink:0;background:var(--navy);overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px);padding-bottom:28px}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:2px}
+.cg{border-bottom:1px solid rgba(255,255,255,.07)}
+.ch{display:flex;align-items:center;gap:8px;padding:10px 17px;cursor:pointer;user-select:none;transition:background .15s}
+.ch:hover{background:rgba(255,255,255,.06)}
+.ci{font-size:.92rem;flex-shrink:0}
+.cl{font-size:.73rem;font-weight:700;color:var(--ice);text-transform:uppercase;letter-spacing:.05em;flex:1;line-height:1.3}
+.cc{font-size:.66rem;background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);border-radius:10px;padding:1px 6px}
+.ca{color:rgba(255,255,255,.3);font-size:.68rem;transition:transform .2s;display:inline-block}
+.cg.op .ca{transform:rotate(90deg)}
+.sl{display:none}
+.cg.op .sl{display:block}
+.st{padding:6px 17px 6px 40px;font-size:.76rem;color:rgba(255,255,255,.58);cursor:pointer;border-left:2px solid transparent;transition:all .13s;line-height:1.4}
+.st:hover{color:#fff;background:rgba(255,255,255,.05);border-left-color:rgba(232,160,32,.45)}
+.st.ac{color:var(--gold);background:rgba(232,160,32,.1);border-left-color:var(--gold);font-weight:500}
+#mn{flex:1;padding:26px 30px;min-width:0}
+#wv h1{font-size:2.4rem;font-weight:800;color:var(--navy);margin-bottom:9px;line-height:1.2;text-align:center}
+#wv h1 span{color:var(--gold)}
+#wv p{color:var(--muted);font-size:.96rem;max-width:500px;margin:0 auto 24px;line-height:1.75;text-align:center}
+.ws{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.wb{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:16px 24px;text-align:center;box-shadow:0 2px 12px rgba(30,39,97,.08)}
+.wn{font-size:2rem;font-weight:800;color:var(--navy);line-height:1}
+.wl{font-size:.68rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+.cg2{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px}
+.ck{background:#fff;border:1px solid var(--bdr);border-radius:9px;padding:13px 15px;cursor:pointer;transition:all .18s;box-shadow:0 2px 10px rgba(30,39,97,.07)}
+.ck:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(30,39,97,.13);border-color:var(--navy)}
+.ki{font-size:1.25rem;margin-bottom:4px}
+.kt{font-weight:600;font-size:.81rem;color:var(--navy)}
+.kc{font-size:.7rem;color:var(--muted);margin-top:1px}
+#sv{display:none}
+#sv.vis{display:block}
+.sh{background:var(--navy);border-radius:12px;padding:22px 26px;margin-bottom:18px;position:relative;overflow:hidden}
+.sh::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--gold)}
+.sl2{font-size:.7rem;color:var(--ice);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;padding-left:5px}
+.sti{font-size:1.65rem;font-weight:800;color:#fff;padding-left:5px;line-height:1.2}
+.tg{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;padding-left:5px}
+.tg span{font-size:.67rem;padding:2px 9px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.ti{background:rgba(232,160,32,.25);color:#f4bf5f}
+.tb{background:rgba(26,158,92,.25);color:#5fdb9e}
+.tr{background:rgba(192,57,43,.25);color:#f08070}
+.tn{background:rgba(2,128,144,.25);color:#69d6e8}
+.tg2{background:rgba(202,219,252,.2);color:var(--ice)}
+.th{background:rgba(100,116,155,.25);color:#b0bcd8}
+.ta{background:rgba(180,100,255,.2);color:#cc99ff}
+.tm{background:rgba(255,165,0,.2);color:#ffa500}
+.cd2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.cd{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:18px 20px;box-shadow:0 2px 10px rgba(30,39,97,.07)}
+.cf{grid-column:1/-1}
+.cd h3{font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:700}
+.tx{font-size:.9rem;line-height:1.78;color:var(--text)}
+.hl{background:linear-gradient(135deg,rgba(30,39,97,.05),rgba(2,128,144,.05));border-left:3px solid var(--teal);border-radius:0 7px 7px 0;padding:11px 15px;margin:11px 0;font-size:.86rem;line-height:1.7}
+.sp{list-style:none;counter-reset:s}
+.sp li{counter-increment:s;display:flex;gap:11px;margin-bottom:10px;font-size:.86rem;line-height:1.65}
+.sp li::before{content:counter(s);background:var(--navy);color:#fff;font-size:.67rem;font-weight:700;min-width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.mt{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:9px}
+.mi{background:var(--bg);border-radius:7px;padding:9px;text-align:center}
+.ml{font-size:.64rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.mv{font-family:monospace;font-size:.82rem;font-weight:700;margin-top:3px;color:var(--navy);word-break:break-word}
+.rb{margin-top:13px}
+.rl{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:3px}
+.rr{height:7px;background:var(--bdr);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.rf{height:100%;border-radius:4px;transition:width .5s ease}
+.r1{background:linear-gradient(90deg,var(--green),var(--red))}
+.r2{background:linear-gradient(90deg,var(--navy),var(--teal))}
+.ex{background:var(--bg);border:1px solid var(--bdr);border-radius:7px;padding:13px 15px;font-size:.84rem;line-height:1.72}
+.ex strong{color:var(--navy)}
+.cw{position:relative;height:210px}
+canvas{display:block;width:100%!important;height:210px!important}
+.nv{display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr)}
+.bn{padding:8px 17px;border-radius:7px;font-family:inherit;font-size:.83rem;font-weight:600;cursor:pointer;border:none;transition:all .18s}
+.bp{background:var(--navy);color:#fff}
+.bp:hover:not(:disabled){background:var(--ndk);transform:translateY(-1px)}
+.bs2{background:var(--bdr);color:var(--text)}
+.bs2:hover:not(:disabled){background:#cdd5ee}
+.bn:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div id="logo">151 <span>Trading Strategies</span></div>
+  <div id="sw">
+    <span id="si">&#128269;</span>
+    <input type="text" id="sq" placeholder="Search strategies…" autocomplete="off">
+    <div id="sr"></div>
+  </div>
+  <div style="color:var(--ice);font-size:.76rem;margin-left:auto;white-space:nowrap">151 strategies &middot; 20 asset classes</div>
+</div>
+<div id="lay">
+  <nav id="sb"></nav>
+  <main id="mn">
+    <div id="wv"></div>
+    <div id="sv"></div>
+  </main>
+</div>
+<script>
+var D=[
+{id:'opt',icon:'⚡',title:'Options',s:[
+{id:'cov-call',n:'Covered Call',tags:[['income','i'],['neutral→bullish','b']],out:'Neutral to Bullish',sum:'Own a stock and sell a call option above the current price. You collect the option premium as income but cap your upside at the strike price.',steps:['Buy (or already own) 100 shares at price S₀','Sell 1 call with strike K > S₀, collecting premium C','Stock stays below K → keep premium, keep stock','Stock rises above K → shares sold at K, you keep C','Repeat monthly for consistent income'],ex:'<strong>Example:</strong> Own Apple at $180. Sell a $190 call for $3. Apple stays at $185 → keep $300 total premium. Apple hits $200 → shares called at $190 = $10 capital gain + $3 premium = $13/share total profit. Best for: steady, dividend-like income from existing positions.',met:{MaxProfit:'K − S₀ + C (capped)',MaxLoss:'S₀ − C (stock→zero)',Breakeven:'S₀ − C',Outlook:'Neutral→Bullish'},chart:{t:'pay',fn:function(p){return(p-100)-(Math.max(p-100,0))+3;}},risk:3,rwd:4,bf:'Existing stockholders seeking income in flat or slow-rising markets'},
+{id:'prot-put',n:'Protective Put',tags:[['hedge','h'],['bullish','b']],out:'Bullish with downside insurance',sum:'Own a stock and buy a put option below the current price. Like car insurance — you pay a premium to cap your maximum loss if the stock crashes.',steps:['Own 100 shares at S₀','Buy a put with strike K ≤ S₀, paying premium D','Stock rises → profit from shares, only lose the premium D','Stock falls below K → put gains value, offsetting losses below K','Maximum loss is capped at (S₀ − K + D)'],ex:'<strong>Example:</strong> Own Tesla at $250. Buy a $220 put for $8. Tesla crashes to $170 — put pays $50/share, so actual loss = $38/share instead of $80. The put saved $42/share net of premium. Used heavily by institutional investors before earnings or macro events.',met:{MaxProfit:'Unlimited (stock rises)',MaxLoss:'S₀ − K + D',Breakeven:'S₀ + D',Outlook:'Bullish'},chart:{t:'pay',fn:function(p){return(p-100)+Math.max(90-p,0)-4;}},risk:2,rwd:8,bf:'Investors who are long a stock but worried about near-term downside risk'},
+{id:'bull-cs',n:'Bull Call Spread',tags:[['gain','g2'],['bullish','b']],out:'Moderately Bullish',sum:'Buy a lower-strike call, sell a higher-strike call. Cheaper than a naked call — you sacrifice some upside to dramatically cut your entry cost.',steps:['Buy call at K₁ (near ATM), paying premium','Sell call at K₂ > K₁ (OTM), receiving premium','Net debit = premium paid − premium received','Profit when stock rises above K₁ + net debit','Max profit when stock exceeds K₂ at expiry'],ex:'<strong>Example:</strong> SPY at $500. Buy $505 call for $8, sell $515 call for $3. Net cost = $5. Max profit = $10. Break-even = $510. Risk = just the $5 paid — vs $8 for the naked call. The short call reduces cost but caps your gain at $510+.',met:{MaxProfit:'K₂ − K₁ − D',MaxLoss:'D (net debit)',Breakeven:'K₁ + D',Outlook:'Moderately Bullish'},chart:{t:'pay',fn:function(p){return Math.max(p-95,0)-Math.max(p-110,0)-5;}},risk:2,rwd:5,bf:'When you are moderately bullish but want to reduce premium outlay'},
+{id:'bear-ps',n:'Bear Put Spread',tags:[['gain','g2'],['bearish','r']],out:'Moderately Bearish',sum:'Buy a higher-strike put, sell a lower-strike put. Profits when the stock falls. Lower cost than a naked put — you cap both your maximum profit and loss.',steps:['Buy put at K₁ (near ATM)','Sell put at K₂ < K₁ (further OTM)','Net debit = premium paid − premium received','Profit as stock drops below K₁','Max profit when stock falls below K₂'],ex:'<strong>Example:</strong> Stock at $100. Buy $95 put for $6, sell $85 put for $2. Net cost = $4. Max profit = $6. Break-even = $91. If stock falls to $80 → max profit realised. Works well as a low-cost hedge or directional bet on moderate declines.',met:{MaxProfit:'K₁ − K₂ − D',MaxLoss:'D (net debit)',Breakeven:'K₁ − D',Outlook:'Moderately Bearish'},chart:{t:'pay',fn:function(p){return Math.max(105-p,0)-Math.max(90-p,0)-4;}},risk:2,rwd:5,bf:'Moderately bearish view with limited and defined risk'},
+{id:'lng-strad',n:'Long Straddle',tags:[['gain','g2'],['neutral','n'],['vol↑','n']],out:'Neutral — expects big move either direction',sum:'Buy a call AND a put at the same strike. You profit from a large move in either direction. Direction does not matter — only the size of the move matters.',steps:['Buy 1 ATM call at strike K','Buy 1 ATM put at strike K','Total cost = call premium + put premium','Profit if stock moves far in either direction','Max loss = total premium paid if stock pins at K at expiry'],ex:'<strong>Example:</strong> Earnings tomorrow. Stock at $100. Buy $100 call for $5, buy $100 put for $5. Total = $10. If stock gaps to $120 → call pays $20, profit = $10. If it crashes to $80 → put pays $20, profit = $10. If stock stays at $100 → lose the full $10. Classic strategy before binary events.',met:{MaxProfit:'Unlimited',MaxLoss:'D (total premium)',BreakevenUp:'K + D',BreakevenDn:'K − D'},chart:{t:'pay',fn:function(p){return Math.max(p-100,0)+Math.max(100-p,0)-10;}},risk:4,rwd:8,bf:'Before binary events: earnings, FDA decisions, FOMC meetings, geopolitical events'},
+{id:'sht-strad',n:'Short Straddle',tags:[['income','i'],['neutral','n'],['sideways','n']],out:'Neutral — stock stays near strike',sum:'Sell a call AND a put at the same strike. Collect premium upfront and profit if the stock stays flat. Unlimited risk if the market moves significantly either way.',steps:['Sell 1 ATM call at strike K, collect premium','Sell 1 ATM put at strike K, collect premium','Total credit = call + put premium','Profit zone: stock stays near K until expiry','Loss grows unlimited the further stock moves'],ex:'<strong>Example:</strong> Stock at $100. Sell $100 call for $5, sell $100 put for $5. Collect $10. Profit zone: $90–$110. Classic 0DTE SPY structure — you want SPY to stay rangebound intraday. Risk: SPY gaps up on surprise CPI data → losses grow rapidly past $110.',met:{MaxProfit:'C (total credit)',MaxLoss:'Unlimited',BreakevenUp:'K + C',BreakevenDn:'K − C'},chart:{t:'pay',fn:function(p){return-(Math.max(p-100,0)+Math.max(100-p,0))+10;}},risk:9,rwd:4,bf:'Low-vol, range-bound environments. Core 0DTE income structure for experienced traders.'},
+{id:'lng-strang',n:'Long Strangle',tags:[['gain','g2'],['neutral','n'],['vol↑','n']],out:'Neutral — expects very large move either way',sum:'Buy an OTM call AND an OTM put. Cheaper than a straddle but needs a much bigger move to be profitable. Lower cost, wider break-evens.',steps:['Buy OTM call at K₁ (above current price)','Buy OTM put at K₂ (below current price)','Both OTM → lower cost than straddle','Needs a bigger price move than straddle to profit','Ideal when expecting a very large event-driven move'],ex:'<strong>Example:</strong> Stock at $100. Buy $115 call for $2, buy $85 put for $2. Total = $4. Break-evens: $81 and $119. Needs 19% move. Paid 60% less than a straddle. If a giant move is likely (e.g. merger rumour), this maximises capital efficiency.',met:{MaxProfit:'Unlimited',MaxLoss:'D (total premium)',BreakevenUp:'K₁ + D',BreakevenDn:'K₂ − D'},chart:{t:'pay',fn:function(p){return Math.max(p-115,0)+Math.max(85-p,0)-4;}},risk:3,rwd:7,bf:'Expecting a very large move and want to pay less than a straddle'},
+{id:'sht-strang',n:'Short Strangle',tags:[['income','i'],['neutral','n'],['sideways','n']],out:'Neutral — stock stays in a wider range',sum:'Sell an OTM call AND an OTM put. Wider profit zone than a short straddle, but lower premium collected. Unlimited risk if the stock breaks out.',steps:['Sell OTM call at K₁ (above current price)','Sell OTM put at K₂ (below current price)','Collect credit = call + put premium','Profit if stock stays between K₂ and K₁','Unlimited risk if stock breaks either boundary'],ex:'<strong>Example:</strong> SPY at $500. Sell $515 call for $3, sell $485 put for $3. Collect $6. Profit zone: $479–$521. Very popular 0DTE structure — broader profit range than the straddle, better probability of profit, but less premium. Gap-risk is the killer on bad macro days.',met:{MaxProfit:'C (credit)',MaxLoss:'Unlimited',BreakevenUp:'K₁ + C',BreakevenDn:'K₂ − C'},chart:{t:'pay',fn:function(p){return-(Math.max(p-115,0)+Math.max(85-p,0))+6;}},risk:8,rwd:4,bf:'Range-bound markets. Most common professional options income strategy.'},
+{id:'iron-con',n:'Iron Condor',tags:[['income','i'],['neutral','n'],['defined-risk','h']],out:'Neutral — stock stays in a defined range',sum:'Sell a strangle + buy outer wings for protection. Both profit and loss are capped. The most popular defined-risk income strategy. Perfect for 0DTE.',steps:['Sell OTM put at K₂, buy further OTM put at K₁ — bull put spread','Sell OTM call at K₃, buy further OTM call at K₄ — bear call spread','Collect net credit','Profit zone: stock stays between K₂ and K₃','Max loss capped by wing width minus credit — no margin surprises'],ex:'<strong>Example:</strong> SPY at $500. Sell $488/$478 put spread + sell $512/$522 call spread. Collect $2 credit. Max profit = $2. Max loss = $8. Probability of profit ≈ 70%. Risk is completely defined — no surprise margin calls. The defining strategy for retail 0DTE SPY trading.',met:{MaxProfit:'Net credit C',MaxLoss:'Wing width − C',ProfitZone:'Between inner strikes',POPEstimate:'~65–75%'},chart:{t:'pay',fn:function(p){var ps=-(Math.max(88-p,0)-Math.max(78-p,0));var cs=-(Math.max(p-112,0)-Math.max(p-122,0));return ps+cs+4;}},risk:4,rwd:4,bf:'Defined-risk income. The most widely used strategy in retail 0DTE and weekly options.'},
+{id:'iron-fly',n:'Iron Butterfly',tags:[['income','i'],['neutral','n'],['defined-risk','h']],out:'Neutral — stock pins at sold strike',sum:'Sell an ATM straddle + buy OTM wings for protection. Higher credit than iron condor but needs a very precise pin at the centre strike.',steps:['Sell ATM put at K and ATM call at K (same strike)','Buy OTM put at K₁ for downside protection','Buy OTM call at K₂ for upside protection','Collect higher credit than iron condor','Max profit only if stock pins at exactly K'],ex:'<strong>Example:</strong> SPY at $500. Sell $500 put and $500 call, buy $490 put and $510 call. Collect $6. Max profit = $6. Max loss = $4. Tighter than condor — higher payout but lower probability. Used when there is a known strong support/resistance at a specific price level.',met:{MaxProfit:'Net credit C',MaxLoss:'Wing − C',Breakeven:'K ± C',BestCase:'Stock pins exactly at K'},chart:{t:'pay',fn:function(p){var ps=-(Math.max(100-p,0)-Math.max(85-p,0));var cs=-(Math.max(p-100,0)-Math.max(p-115,0));return ps+cs+6;}},risk:5,rwd:5,bf:'When you want to bet on a precise price pin at a known support or resistance level'},
+{id:'lng-bfly',n:'Long Call Butterfly',tags:[['gain','g2'],['neutral','n']],out:'Neutral — expects stock to pin at middle strike',sum:'Buy outer calls, sell 2 inner calls. Very low cost way to profit if the stock pins at the middle strike. Exceptional risk-to-reward if you have a specific price target.',steps:['Buy 1 call at lower strike K₁','Sell 2 calls at middle strike K₂','Buy 1 call at higher strike K₃','Strikes equidistant: K₂−K₁ = K₃−K₂ = κ','Small net debit; profit peaks sharply at K₂'],ex:'<strong>Example:</strong> Stock at $100. Buy $92 call, sell 2× $100 calls, buy $108 call. Net debit = $1.50. Max profit = $6.50. Max loss = $1.50. Risk/reward of 4.3:1. If you have very high conviction on a specific price target, this offers extraordinary leverage at minimal cost.',met:{MaxProfit:'κ − D',MaxLoss:'D (net debit)',Breakeven:'K₁+D and K₃−D',RiskReward:'Often 4:1 or better'},chart:{t:'pay',fn:function(p){return Math.max(p-92,0)-2*Math.max(p-100,0)+Math.max(p-108,0)-1.5;}},risk:1,rwd:6,bf:'When you have a specific price target and want high-leverage, low-cost exposure'},
+{id:'collar',n:'Collar',tags:[['hedge','h'],['bullish','b']],out:'Moderately Bullish with downside protection',sum:'Own stock + buy a put (downside insurance) + sell a call (pays for the put). Limits both your gains and losses. Often zero net cost. Ideal for protecting large positions.',steps:['Own 100 shares at S₀','Buy OTM put at K₁ < S₀ (protection against large falls)','Sell OTM call at K₂ > S₀ (premium to offset the put cost)','Net cost near zero if strikes are balanced correctly','Stock is "fenced" between K₁ (floor) and K₂ (ceiling)'],ex:'<strong>Example:</strong> Own stock at $100. Buy $90 put for $3, sell $110 call for $3. Net cost = $0. If stock falls to $70 → effective floor is $90, saving $20/share. If stock rises to $130 → you only capture up to $110. Popular for protecting a concentrated equity position before a lock-up expiry.',met:{MaxProfit:'K₂ − S₀ − H',MaxLoss:'S₀ − K₁ + H',Breakeven:'S₀ + H',NetCost:'Often near zero'},chart:{t:'pay',fn:function(p){return(p-100)+Math.max(90-p,0)-Math.max(p-110,0);}},risk:2,rwd:4,bf:'Large stock positions where you want to protect gains without selling shares'},
+{id:'cal-spr',n:'Calendar Spread',tags:[['income','i'],['neutral','n']],out:'Neutral — expects stock to stay near strike',sum:'Buy a long-dated option, sell a short-dated option at the same strike. Profit from the difference in time decay rates — the short option decays faster.',steps:['Buy call with longer expiry T\' at strike K','Sell call with shorter expiry T < T\' at same strike K','Net debit = long cost − short credit','Short option decays faster (higher theta closer to expiry)','Profit if stock stays near K through short expiry date'],ex:'<strong>Example:</strong> Stock at $100. Buy 60-day $100 call for $8, sell 30-day $100 call for $5. Net cost = $3. At 30 days: sold call decays to $0, long call worth ~$6. Profit ≈ $3. Roll: sell another 30-day call, collecting more premium. Treat like a covered call but using a long option instead of stock.',met:{MaxProfit:'V − D (V = long option value at short expiry)',MaxLoss:'D (net debit)',BestCase:'Stock pins at K at short expiry date'},chart:{t:'bar',lbs:['Stock falls sharply','Stock near K','Stock rises sharply'],vs:[-3,3,-1],cs:['#C0392B','#1a9e5c','#C0392B'],ti:'Calendar Spread P&L by Scenario'},risk:2,rwd:4,bf:'When you expect low volatility and the stock to stay flat near-term'},
+{id:'ratio-spr',n:'Ratio Spread',tags:[['income','i'],['neutral','n']],out:'Neutral to slightly directional',sum:'Sell more options than you buy. Generates income or a zero-cost position but creates uncapped risk on one side. Used when you are confident the stock will not move far.',steps:['Buy 1 option at K₁ (near ATM)','Sell 2+ options at K₂','Often zero net cost — the short premium fully offsets the long cost','Limited profit zone below (call) or above (put) the sold strike','Unlimited risk if stock moves strongly through the sold strike'],ex:'<strong>Example:</strong> Stock at $100. Buy 1× $100 call for $6, sell 2× $110 calls for $3 each. Net cost = $0. If stock stays below $110 → profit up to $10 at $110. Above $120 → naked-call losses start accumulating. This is a "free" bet with a dangerous tail. Size carefully.',met:{MaxProfit:'K₂ − K₁ (when stock = K₂)',MaxLoss:'Unlimited above sold strikes',BestCase:'Stock rises to exactly K₂ at expiry'},chart:{t:'pay',fn:function(p){return Math.max(p-100,0)-2*Math.max(p-110,0);}},risk:7,rwd:5,bf:'When premiums are rich and you accept tail risk for a zero-cost directional position'}
+]},
+{id:'stk',icon:'📈',title:'Stocks',s:[
+{id:'momentum',n:'Price Momentum',tags:[['gain','g2'],['systematic','a']],out:'Buy winners, short losers',sum:'Stocks that went up recently tend to keep going up. Buy the top performers over 12 months, short the worst performers. Hold 1 month and rebalance. Documented since 1993.',steps:['Calculate 12-month cumulative return for every stock in the universe','Skip the most recent month (avoids short-term reversal effect)','Rank all stocks by this return','Buy top decile (best performers), short bottom decile (worst)','Dollar-neutral portfolio — equal long and short dollar exposure'],ex:'<strong>Example:</strong> Universe of 500 large-caps. Top 50 by 12-month return → buy equally weighted. Bottom 50 → short equally weighted. Skip last month to avoid microstructure noise. First documented by Jegadeesh & Titman (1993). One of the most replicated findings in finance.',met:{Formation:'12 months',SkipPeriod:'1 month',Holding:'1–3 months',Neutrality:'Dollar-neutral'},chart:{t:'bar',lbs:['Losers','Q2','Q3','Q4','Winners'],vs:[-3.2,-0.8,0.5,1.8,4.1],cs:['#C0392B','#e07050','#888','#7ab87a','#1a9e5c'],ti:'Monthly Returns by Momentum Decile (%)'},risk:5,rwd:6,bf:'Systematic equity portfolios with diversified exposure across hundreds of stocks'},
+{id:'earns-mom',n:'Earnings Momentum (SUE)',tags:[['gain','g2'],['event','m']],out:'Buy positive earnings surprises',sum:'Stocks that beat earnings expectations continue to outperform for months afterward — Post-Earnings Announcement Drift (PEAD). Measure surprise with the SUE score.',steps:['Compute SUE = (Actual EPS − Expected EPS) / StdDev of last 8 quarters of surprises','Positive SUE = beat; Negative SUE = miss','Buy top decile by SUE (biggest positive surprises)','Short bottom decile (biggest misses)','Hold 1–6 months — market underreacts to earnings news, then corrects slowly'],ex:'<strong>Example:</strong> Company reports $1.20 EPS vs $1.00 expected. If 8-quarter stddev of surprises = $0.08 → SUE = 2.5. High-SUE stocks drift upward for 3–6 months as sell-side analysts slowly raise estimates. This is the PEAD anomaly — one of the most robust and persistent in equity markets.',met:{Signal:'SUE score',Formation:'Most recent quarter',Holding:'1–6 months',AnomalyName:'Post-Earnings Announcement Drift'},chart:{t:'bar',lbs:['Worst (Q1)','Q2','Q3','Q4','Best (Q5)'],vs:[-2.1,-0.6,0.4,1.2,2.8],cs:['#C0392B','#e07050','#888','#7ab87a','#1a9e5c'],ti:'Monthly Returns by SUE Quintile (%)'},risk:5,rwd:6,bf:'Event-driven systematic strategies built around quarterly earnings releases'},
+{id:'value',n:'Value Strategy (HML)',tags:[['gain','g2'],['systematic','a']],out:'Buy cheap stocks, short expensive ones',sum:'Buy stocks trading cheap relative to book value. The classic Fama-French HML (High Minus Low) factor. Long high Book-to-Price stocks, short low Book-to-Price stocks.',steps:['Compute Book-to-Price = Book Value per Share / Market Price','Sort all stocks by B/P ratio','Buy stocks in highest B/P decile (cheapest relative to fundamental value)','Short stocks in lowest B/P decile (most expensive)','Dollar-neutral portfolio, 1–6 month holding period'],ex:'<strong>Example:</strong> Company A: book $50/share, price $40 → B/P = 1.25 (cheap, trading below book). Company B: book $10/share, price $100 → B/P = 0.10 (expensive). Strategy buys A and shorts B, betting A will rerate upward as the market recognises its cheapness. Value is the oldest factor in quantitative finance.',met:{Signal:'Book/Price ratio',Holding:'1–6 months',FamaFrenchFactor:'HML',Correlation:'Negatively correlated with momentum'},chart:{t:'bar',lbs:['Growth','Q2','Q3','Q4','Value'],vs:[-0.9,-0.2,0.3,0.8,1.6],cs:['#C0392B','#e07050','#888','#7ab87a','#1a9e5c'],ti:'Value Premium: Monthly Returns (%)'},risk:5,rwd:5,bf:'Long-horizon systematic portfolios. Best when combined with momentum (negative correlation).'},
+{id:'low-vol',n:'Low-Volatility Anomaly',tags:[['gain','g2'],['systematic','a']],out:'Buy low-risk stocks, short high-risk',sum:'Counterintuitively, lower-volatility stocks beat higher-volatility stocks on a risk-adjusted basis — "boring stocks win." Contradicts CAPM. Explained by leverage constraints.',steps:['Calculate historical volatility (σ) for each stock over 6–12 months','Buy the bottom decile by σ (lowest volatility stocks)','Short the top decile by σ (highest volatility, most speculative stocks)','Dollar-neutral portfolio','Rebalance every 1–3 months'],ex:'<strong>Example:</strong> Utility stocks (vol ≈ 12%) vs speculative biotech (vol ≈ 60%). Low-vol strategy buys utilities, shorts biotechs. Delivers higher Sharpe ratios than the market despite lower absolute returns. Why does it work? Institutional investors are benchmarked to indices — they overweight high-vol stocks, making them systematically overpriced.',met:{Signal:'Historical volatility σ',Lookback:'6–12 months',Holding:'1–3 months',Anomaly:'Contradicts CAPM predictions'},chart:{t:'bar',lbs:['High Vol','Q2','Q3','Q4','Low Vol'],vs:[0.4,0.6,0.8,0.9,1.1],cs:['#C0392B','#e07050','#888','#7ab87a','#1a9e5c'],ti:'Sharpe Ratio by Volatility Quintile'},risk:3,rwd:5,bf:'Risk-aware investors seeking equity-like returns with significantly lower drawdowns'},
+{id:'pairs',n:'Pairs Trading',tags:[['arb','a'],['neutral','n']],out:'Mean-reversion between two correlated stocks',sum:'Find two historically correlated stocks. When they diverge, short the outperformer and buy the underperformer. Profit when they converge back. Fully market-neutral.',steps:['Identify two stocks with historically high correlation (e.g. Coke & Pepsi)','Monitor the return spread between them each day','When one diverges significantly above its pair → short it, buy the other','Maintain equal dollar amounts long and short (dollar-neutral)','Close when spread reverts to historical average (mean-reversion)'],ex:'<strong>Example:</strong> Coke and Pepsi normally move in lockstep. If Coke jumps 5% while Pepsi stays flat → short Coke, buy Pepsi (equal dollar amounts). When gap closes — as it historically has — both legs profit. P&L depends only on the relationship between the two stocks, not overall market direction. Fully market-neutral.',met:{Signal:'Spread deviation from historical mean',Correlation:'Must be historically high',Holding:'Days to weeks',Neutrality:'Dollar-neutral — market-neutral'},chart:{t:'line',lbs:['Jan','Feb','Mar','Apr','May','Jun','Jul'],ss:[{l:'Stock A',d:[100,102,105,110,105,106,104],c:'#1E2761'},{l:'Stock B',d:[100,101,103,102,104,104,104],c:'#028090'},{l:'Spread',d:[0,1,2,8,-1,2,0],c:'#E8A020'}],ti:'Pairs Trade: Price Divergence and Convergence'},risk:3,rwd:5,bf:'Market-neutral equity strategies. One of the oldest and most studied quant strategies.'},
+{id:'mean-rev',n:'Mean Reversion (Sector Cluster)',tags:[['arb','a'],['neutral','n']],out:'Reversion within an industry peer group',sum:'Extension of pairs trading to an entire cluster of stocks (e.g. all semiconductor companies). Buy the laggards, short the leaders within the group. Profit from reversion to the cluster mean.',steps:['Define a cluster of correlated stocks (e.g. semiconductor sector: NVDA, AMD, INTC, TSM)','Compute the cluster mean return each day','Compute each stock\'s demeaned return = its return minus the cluster mean','Short stocks with positive demeaned return (cluster outperformers)','Buy stocks with negative demeaned return (cluster underperformers)'],ex:'<strong>Example:</strong> Semi cluster day: NVDA +5%, AMD +1%, INTC −1%, TSM 0%. Cluster mean = +1.25%. NVDA is +3.75% above mean → short NVDA. INTC is −2.25% below → buy INTC. Strategy bets NVDA will give back some relative gains. Works because stocks within an industry share common fundamental drivers.',met:{Scope:'Industry / sector clusters',Signal:'Demeaned return within cluster',Frequency:'Daily to weekly',Neutrality:'Dollar-neutral within each cluster'},chart:{t:'bar',lbs:['Mon','Tue','Wed','Thu','Fri'],vs:[3.8,-2.1,1.5,-0.9,0.7],cs:['#1a9e5c','#C0392B','#1a9e5c','#C0392B','#1a9e5c'],ti:'Cluster Strategy: Daily Spread P&L (bps)'},risk:3,rwd:4,bf:'Daily systematic equity trading within sector clusters — used by most stat arb desks'},
+{id:'moving-avg',n:'Moving Average Crossover',tags:[['gain','g2'],['trend','b']],out:'Trend-following — direction follows the crossover',sum:'Trade when a short moving average crosses a long one. Golden Cross (short above long) = buy signal. Death Cross (short below long) = sell signal. Simple and durable.',steps:['Calculate short MA: e.g. SMA(10) or EMA(10)','Calculate long MA: e.g. SMA(50) or SMA(200)','Buy (go long) when short MA crosses above long MA — "Golden Cross"','Sell (go short) when short MA crosses below long MA — "Death Cross"','Optional: use 3 MAs (T₁ < T₂ < T₃) to filter out false crossovers'],ex:'<strong>Example:</strong> SPY with 10-day and 50-day SMA. Golden Cross in January 2023 → buy SPY. Death Cross in September 2022 → sell/short. The 10/50 generates cleaner signals than 5/20 but lags more on entries and exits. All MA systems suffer from whipsaws in choppy, trendless markets — best used alongside volatility filters.',met:{ShortMA:'5–15 days',LongMA:'20–200 days',Signal:'Crossover event',Types:'SMA, EMA, WMA, VWMA'},chart:{t:'line',lbs:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'],ss:[{l:'Price',d:[100,98,102,105,103,108,112,110],c:'#1E2761'},{l:'MA(10)',d:[null,null,null,null,101.6,103.2,105.8,107.8],c:'#E8A020'},{l:'MA(50)',d:[null,null,null,null,null,null,103,104.5],c:'#C0392B'}],ti:'Moving Average Crossover on Price'},risk:4,rwd:5,bf:'Trend-following across stocks, futures, and ETFs'},
+{id:'merger-arb',n:'Merger Arbitrage',tags:[['arb','a'],['event','m']],out:'Event-driven — deal closes or falls through',sum:'When a takeover is announced, the target trades below the offer price due to deal risk. Buy the target to capture the spread. Short the acquirer in stock-for-stock deals.',steps:['Company A announces acquisition of Company B at offer price P','Company B stock rises to P − spread (spread reflects deal failure probability)','Buy Company B at P − spread; receive P if deal closes','For stock deals: also short Company A shares to hedge acquirer valuation risk','Risk: deal falls through → Company B collapses to pre-deal price'],ex:'<strong>Example:</strong> Microsoft bids $95/share cash for Activision. Activision trades at $88 (8% spread due to regulatory uncertainty). Buy at $88. If deal closes → receive $95 = 8% profit. If regulators block deal → Activision might fall to $60 → −32% loss. Risk/reward must be weighted by deal completion probability — typically estimated at 80–90%.',met:{Edge:'The M&A spread (typically 2–10%)',Risk:'Deal failure — regulatory block, financing issues, target rejection',Holding:'Weeks to months until deal closes',TypicalReturn:'2–10% per deal'},chart:{t:'bar',lbs:['Deal Closes (~80%)','Deal Fails (~20%)'],vs:[6.5,-23],cs:['#1a9e5c','#C0392B'],ti:'Merger Arb: Typical Outcomes (%)'},risk:6,rwd:4,bf:'Event-driven strategies with expertise in regulatory risk and deal structuring'},
+{id:'stat-arb',n:'Statistical Arbitrage',tags:[['arb','a'],['systematic','a']],out:'Systematic optimised portfolio across hundreds of stocks',sum:'Use a multi-factor risk model to build an optimised portfolio across hundreds of stocks. Maximise Sharpe ratio subject to dollar-neutrality constraints. The engine behind most quant equity hedge funds.',steps:['Estimate expected returns Eᵢ for all N stocks using any alpha signal(s)','Build a covariance matrix Cᵢⱼ from a multi-factor risk model (Barra, Axioma)','Solve: maximise Sharpe ratio subject to dollar-neutrality and factor constraints','Result: optimal weights — long the best risk-adjusted stocks, short the worst','Diversified across thousands of positions — single stock risk is negligible'],ex:'<strong>Example:</strong> Universe of 2,000 US stocks. Signals from earnings, momentum, value, quality. Barra risk model for covariance. Optimisation yields positions at 0.05–0.2% per stock. Daily rebalancing. This is the Citadel / Two Sigma / DE Shaw engine — the archetype of quantitative equity investing. Transaction cost modelling is critical.',met:{Universe:'500–5,000 stocks',RiskModel:'Multi-factor (Barra, Axioma)',Neutrality:'Dollar, sector, factor neutral',Rebalance:'Daily'},chart:{t:'bar',lbs:['Gross Alpha','Transaction Costs','Net Alpha'],vs:[8.5,-3.2,5.3],cs:['#1a9e5c','#C0392B','#1E2761'],ti:'Typical Stat Arb Annual Returns (%)'},risk:3,rwd:5,bf:'Quantitative hedge funds and systematic asset managers with strong technology infrastructure'}
+]},
+{id:'etf',icon:'🔄',title:'ETFs',s:[
+{id:'sect-rot',n:'Sector Momentum Rotation',tags:[['gain','g2'],['systematic','a']],out:'Rotate into the best-performing sectors each month',sum:'Rank all sector ETFs by recent 6–12 month performance. Rotate into the top performers each month. Optionally filter with a moving average to avoid buying falling sectors.',steps:['Gather universe of sector ETFs (XLK, XLF, XLE, XLV, XLY, etc.)','Calculate 12-month cumulative return for each ETF','Buy top 3–5 sectors at month-end rebalance','Optional: only buy if ETF price > 200-day MA (trend filter)','Rebalance monthly — sell laggards, add new leaders'],ex:'<strong>Example:</strong> March rebalance: XLK (tech) +25%, XLV (healthcare) +18%, XLE (energy) +15% over past 12 months → rotate 100% into these three. Next month: XLE falls below its 200-day MA → drop it, add next best sector (XLY +12%). Simple monthly discipline that outperforms buy-and-hold historically.',met:{Universe:'11 S&P 500 sector ETFs',Rebalance:'Monthly',Holding:'1 month',Variant:'Dual-momentum adds broad market filter'},chart:{t:'bar',lbs:['Tech','Health','Energy','Financials','Utilities','Real Est'],vs:[25,18,15,8,2,-3],cs:['#1a9e5c','#1a9e5c','#1a9e5c','#888','#888','#C0392B'],ti:'Example 12-Month ETF Returns at Rebalance (%)'},risk:5,rwd:6,bf:'Intermediate-term systematic investors seeking sector rotation alpha'},
+{id:'dual-mom',n:'Dual Momentum',tags:[['gain','g2'],['systematic','a']],out:'Relative momentum + absolute momentum combined',sum:'Combines cross-sectional momentum (which sector is best) with time-series momentum (is the broad market in an uptrend?). Automatically moves to safety assets during broad market downturns.',steps:['Step 1: Is SPY above its 200-day moving average?','If NO → exit all equity ETFs, move to bonds/gold (absolute momentum filter)','If YES → rank sector ETFs by 12-month return (relative momentum)','Buy top performers and hold for 1 month','Repeat monthly — the system automatically avoids bear markets'],ex:'<strong>Example:</strong> Feb 2020: SPY falls below 200-day MA → exit all sectors → buy TLT (long bonds). March 2020 recovery: SPY crosses back above 200MA → reenter top sectors (tech, healthcare). Avoids most of the crash; re-enters early in the recovery. The absolute momentum filter is the key innovation.',met:{TrendFilter:'200-day SMA on broad market',Rebalance:'Monthly',CrisisAction:'Switches to bonds/gold/cash',Pioneer:'Gary Antonacci (2014)'},chart:{t:'line',lbs:['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8'],ss:[{l:'Buy & Hold',d:[100,88,72,80,90,105,115,120],c:'#C0392B'},{l:'Dual Momentum',d:[100,100,100,105,115,120,128,133],c:'#1a9e5c'}],ti:'Dual Momentum vs Buy & Hold Through Bear Market'},risk:3,rwd:6,bf:'Long-only investors who want automatic protection from broad equity bear markets'}
+]},
+{id:'fi',icon:'🏦',title:'Fixed Income',s:[
+{id:'bond-lad',n:'Bond Ladder',tags:[['income','i'],['neutral','n']],out:'Steady income, diversified interest rate exposure',sum:'Buy bonds maturing at equally spaced dates. As each bond matures, reinvest in a new long-dated bond. Provides predictable cash flows and naturally diversifies interest rate risk.',steps:['Buy 10 bonds maturing in 1, 2, 3 … 10 years','Allocate equal capital to each maturity rung','Each year: shortest bond matures → reinvest into a new 10-year bond','Ladder maintains constant average duration automatically','Rising rates: new bonds bought at higher yields. Falling: earlier bonds locked in better yields'],ex:'<strong>Example:</strong> $100,000 invested. Buy $10,000 each in 1–10 year US Treasuries. Year 1: $10k + interest from 1-year bond matures → buy new 10-year bond. Ladder now spans 2–11 years. Repeat forever. You always have near-maturity bonds (liquidity) and longer bonds (higher income). No need to predict interest rates.',met:{Maturities:'Equally spaced (e.g. 1–10 years)',Rebalance:'When each bond matures',Risk:'Low — interest rate exposure diversified across maturities',Income:'Regular from coupons'},chart:{t:'bar',lbs:['1Y','2Y','3Y','4Y','5Y','6Y','7Y','8Y','9Y','10Y'],vs:[10,10,10,10,10,10,10,10,10,10],cs:Array(10).fill('#1E2761'),ti:'Bond Ladder: $100k Allocation by Maturity ($k)'},risk:2,rwd:3,bf:'Income investors seeking predictable cashflows and diversified interest rate risk'},
+{id:'bond-fly',n:'Bond Butterfly Spread',tags:[['arb','a'],['neutral','n']],out:'Profits from yield curve shape changes, not rate level',sum:'Long the wings (short-maturity + long-maturity bonds), short the belly (medium-maturity). Dollar-duration-neutral — immune to parallel rate shifts, only profits from curve shape changes.',steps:['Long barbell: buy short-maturity + long-maturity bonds (the wings)','Short bullet: sell medium-maturity bond of equal dollar duration (the belly)','Set positions so dollar durations exactly cancel — duration-neutral','Zero cost: dollar values balance out — self-financing trade','Profit if the yield curve curvature changes (belly cheapens or richens relative to wings)'],ex:'<strong>Example:</strong> Long $3M 2-year + $3M 30-year Treasuries, short $6M 10-year Treasuries. If the 10-year (belly) cheapens relative to the 2Y and 30Y → profit. If 10-year richens → loss. A +1% parallel shift in all yields has zero P&L impact (duration-neutral). Pure yield curve curvature bet.',met:{Structure:'Long wings + short belly',Exposure:'Yield curve curvature only',Duration:'Dollar-duration-neutral',Cost:'Zero — self-financing'},chart:{t:'line',lbs:['1Y','2Y','5Y','10Y','20Y','30Y'],ss:[{l:'Normal',d:[4.0,4.1,4.3,4.35,4.4,4.45],c:'#1E2761'},{l:'Humped (belly richens = loss)',d:[4.0,4.1,4.8,5.0,4.5,4.45],c:'#C0392B'}],ti:'Yield Curves: Butterfly Position Exposure'},risk:3,rwd:4,bf:'Fixed income relative value traders at banks and hedge funds'},
+{id:'fi-carry',n:'Fixed Income Carry',tags:[['income','i'],['systematic','a']],out:'Buy high-carry bonds, sell low-carry bonds',sum:'Bond carry = coupon yield + roll-down return as the bond ages into a lower-yield part of a steep curve. Buy the highest-carry bonds, sell the lowest-carry bonds systematically.',steps:['For each bond, compute carry = yield + roll-down component','Roll-down = price appreciation as bond ages on a positively sloped yield curve','Buy bonds in the top decile by carry','Sell (underweight) bonds in the bottom decile','Dollar-neutral or long-only depending on mandate and constraints'],ex:'<strong>Example:</strong> 5-year Treasury yields 4.5%. 4-year Treasury yields 4.0%. Hold the 5-year for 1 year: it becomes a 4-year, yield drops from 4.5% to 4.0% (if curve unchanged) → price rises. That is the roll-down gain. Total carry = 4.5% coupon + roll-down gain. Carry strategies systematically harvest this across the yield curve.',met:{Signal:'Yield + roll-down return',Evidence:'Works across all major government bond markets globally',Holding:'Monthly rebalance'},chart:{t:'bar',lbs:['1Y','2Y','5Y','10Y','20Y','30Y'],vs:[0.4,0.6,1.0,1.2,1.0,0.8],cs:Array(6).fill('#028090'),ti:'Estimated Annual Carry by Bond Maturity (%)'},risk:3,rwd:4,bf:'Fixed income portfolio managers seeking systematic, diversified return sources'}
+]},
+{id:'vol',icon:'〰️',title:'Volatility',s:[
+{id:'vrp',n:'Volatility Risk Premium',tags:[['income','i'],['neutral','n']],out:'Sell implied vol, collect the risk premium',sum:'Implied volatility (what options price in) is almost always higher than realized volatility (what actually happens). Sell options, delta-hedge, and collect the difference as systematic income.',steps:['Sell ATM straddle on S&P 500 options at start of month','Delta-hedge daily to remove directional market exposure','If realized vol < implied vol → straddle decays profitably (theta income)','Close at expiry or when profit target is hit','VIX is the key implied vol indicator; realised vol is calculated from daily returns'],ex:'<strong>Example:</strong> VIX = 20 (options pricing in 20% annualised vol). Realized vol over next month = 14%. Straddle was sold at 20% vol pricing → collect premium for 20% of moves, but only pay out for 14% of actual moves. The 6% difference is gross profit, minus delta-hedging costs. This positive spread occurs in ~75% of months historically.',met:{Edge:'Implied vol > realized vol (most months)',WinRate:'~75% of months historically',Risk:'Sudden VIX spike (March 2020: VIX 15→85)',Frequency:'Monthly or sub-monthly'},chart:{t:'bar',lbs:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],vs:[1.2,0.8,-8.5,0.9,1.1,0.7,0.6,1.0,-3.2,0.8,1.2,0.9],cs:[1.2,0.8,-8.5,0.9,1.1,0.7,0.6,1.0,-3.2,0.8,1.2,0.9].map(function(v){return v>0?'#1a9e5c':'#C0392B';}),ti:'Vol Risk Premium: Example Monthly P&L (%)'},risk:6,rwd:5,bf:'Sophisticated traders who can manage delta-hedging and handle left-tail risk'},
+{id:'vix-basis',n:'VIX Futures Basis Trading',tags:[['arb','a'],['neutral','n']],out:'Mean-reversion: futures roll down toward spot VIX',sum:'VIX futures normally trade at a premium to spot VIX (contango). Short VIX futures to earn the roll-down as they decay toward spot. One of the most profitable but also most dangerous volatility strategies.',steps:['Compute daily roll = (VIX futures price − spot VIX) / trading days to expiry','If daily roll > 0.10 (contango) → short VIX futures (UX1)','Futures roll down toward spot VIX as expiry approaches','If daily roll < −0.10 (backwardation) → long VIX futures','Optional: hedge with mini-S&P 500 futures to offset equity market exposure'],ex:'<strong>Example:</strong> VIX spot = 15, June futures = 19. Daily roll = 4/20 = $0.20. Short at 19 — if VIX stays calm, futures decay to 15 by expiry. Profit = $4 × notional. <strong>RISK WARNING:</strong> In March 2020, VIX spiked from 15 to 85 in days. The XIV ETN (short VIX) was completely wiped out in a single trading day (February 2018). Position sizing is existential.',met:{EntrySignal:'Daily roll > 0.10',ExitSignal:'Daily roll < 0.05',MaxRisk:'VIX can spike 5× in one day',Hedge:'Mini S&P 500 futures'},chart:{t:'line',lbs:['Wk 1','Wk 2','Wk 3','Wk 4','Expiry'],ss:[{l:'VIX Spot',d:[15,16,15,14,15],c:'#028090'},{l:'VIX Futures',d:[19,18,17,16,15],c:'#E8A020'}],ti:'VIX Contango: Futures Roll Down to Spot'},risk:9,rwd:6,bf:'Volatility specialists who fully understand gap-risk and maintain strict position limits'}
+]},
+{id:'fx',icon:'💱',title:'FX',s:[
+{id:'carry',n:'FX Carry Trade',tags:[['income','i'],['systematic','a']],out:'Long high-yield currencies, short low-yield currencies',sum:'Borrow in low-interest-rate currencies (JPY, CHF), invest in high-interest-rate currencies (AUD, BRL, MXN). Profit = interest rate differential. Risk = sudden carry unwind.',steps:['Identify currencies with the highest and lowest interest rates globally','Borrow in low-rate currency (e.g. JPY at 0.1%)','Convert to high-rate currency (e.g. AUD at 4.5%)','Invest in risk-free local assets in Australia','Profit = 4.4% interest differential minus FX transaction costs'],ex:'<strong>Example:</strong> Classic yen carry trade. Borrow JPY at 0.1%, invest in AUD at 4.5%. Annual carry = 4.4%. Works beautifully in calm markets for years. But August 2024: Bank of Japan raised rates, JPY surged 12% in 3 days as carry trades unwound simultaneously. Years of carry gains wiped out in days. Carry crashes are sudden, correlated, and liquidity-draining.',met:{Signal:'Interest rate differential',Holding:'Medium to long-term',Risk:'Carry crash — sudden, correlated unwind',Anomaly:'Violates Uncovered Interest Parity (UIRP)'},chart:{t:'bar',lbs:['2007 (calm)','2008 (crisis)','2009 (recovery)','2024 (BoJ shock)'],vs:[8,-25,12,-14],cs:['#1a9e5c','#C0392B','#1a9e5c','#C0392B'],ti:'FX Carry Trade: Annual Returns by Regime (%)'},risk:7,rwd:5,bf:'Macro traders with high risk tolerance and ability to survive sudden carry unwinds'},
+{id:'fx-mom',n:'FX Momentum + Carry Combo',tags:[['gain','g2'],['systematic','a']],out:'Best-of-both-worlds: trend + yield',sum:'Combine FX carry with a momentum filter. Only hold high-carry currencies that are also trending up. Reduces the devastating left-tail risk of pure carry while maintaining most of the upside.',steps:['Compute carry score for each currency = forward discount (interest differential)','Compute momentum score = past 1–12 month total return','Combine scores: w₁×carry + w₂×momentum where weights minimise combined variance','Buy high combined-score currencies, short low combined-score currencies','Rebalance monthly — momentum filter exits positions that start falling'],ex:'<strong>Example:</strong> AUD has 4% carry but is trending down → momentum score reduces AUD weight. MXN has 7% carry and is trending up → increase MXN weight. The momentum filter avoided holding AUD during the 2008 carry crash because AUD was already in a downtrend before the worst of it. Carry and momentum are historically negatively correlated — combining them diversifies the portfolio.',met:{CarryWeight:'Variance-minimising w₁',MomentumWeight:'Variance-minimising w₂',Benefit:'Lower drawdowns than pure carry',Rebalance:'Monthly'},chart:{t:'bar',lbs:['Pure Carry','Pure Momentum','Combo Strategy'],vs:[0.62,0.48,0.81],cs:['#1E2761','#028090','#1a9e5c'],ti:'Annual Sharpe Ratios: Carry vs Momentum vs Combo'},risk:5,rwd:6,bf:'Systematic macro traders seeking diversified FX factor exposure across multiple strategies'}
+]},
+{id:'com',icon:'🛢️',title:'Commodities & Futures',s:[
+{id:'roll-yield',n:'Roll Yield Strategy',tags:[['income','i'],['systematic','a']],out:'Profit from commodity futures term structure',sum:'Commodities in backwardation (near > far prices) generate positive roll yield. In contango (near < far), rolling loses money. Systematically buy backwardated, avoid or short contangoed commodities.',steps:['Check each commodity futures curve: is it in backwardation or contango?','Backwardation: near-month futures price > far-month → buy and roll (positive carry)','Contango: near-month < far-month → avoid or short (negative carry from rolling)','Roll: before expiry, sell near contract, buy next month contract','In backwardation, each roll earns a "roll yield" profit independent of price direction'],ex:'<strong>Example:</strong> Crude oil: Jan futures $85, Apr futures $80 (backwardation, spread = $5). Buy Jan at $85. Before expiry: sell Jan (~$82), roll into new Apr at $80. Earned $2 roll yield. This is entirely independent of whether oil goes up or down. WTI was in steep backwardation most of 2021–2022, generating strong roll returns for long positions even in volatile periods.',met:{Positive:'Backwardation → positive roll yield',Negative:'Contango → negative roll yield (drag)',Measure:'Roll return = (near price − far price) / far price'},chart:{t:'bar',lbs:['Jan','Feb','Mar','Apr','May','Jun'],vs:[85,84,83,82,81,80],cs:Array(6).fill('#E8A020'),ti:'Backwardation: Futures Curve Shape ($/barrel)'},risk:5,rwd:5,bf:'Commodity trading advisors (CTAs) and macro funds with commodity markets expertise'},
+{id:'trend-fut',n:'Trend Following (Managed Futures)',tags:[['gain','g2'],['systematic','a']],out:'Follow momentum across 50–100 markets simultaneously',sum:'Go long futures markets in uptrends, short in downtrends. Diversified across equities, bonds, commodities, and FX futures. The CTA / managed futures approach. Famous for "crisis alpha."',steps:['Build a universe of 50–100 futures across all asset classes and geographies','For each market, compute trend signal (12-month momentum or MA crossover)','Go long markets with positive trend, short markets with negative trend','Position size inversely proportional to market volatility — risk parity sizing','Rebalance weekly or monthly — adjust positions as trends change'],ex:'<strong>Example:</strong> In 2022: trend funds were long crude oil (energy crisis trend), short US Treasuries (rate hike trend), short equities (bear market trend), long USD (flight to safety trend), short EUR (Europe energy crisis). Result: trend-following funds +20% while equities −20% and bonds −15%. This "crisis alpha" is their defining value proposition for institutional portfolios.',met:{Markets:'50–100 liquid futures globally',Signal:'Momentum / MA crossover',Sizing:'Volatility-weighted (risk parity)',CrisisAlpha:'Performs during prolonged trends — especially crises'},chart:{t:'bar',lbs:['2008','2010','2014','2018','2020','2022'],vs:[18,-3,-5,-2,16,20],cs:[18,-3,-5,-2,16,20].map(function(v){return v>0?'#1a9e5c':'#C0392B';}),ti:'Trend Following Returns in Notable Years (%)'},risk:5,rwd:7,bf:'Institutional allocators seeking portfolio diversification and crisis-period positive returns'}
+]},
+{id:'adv',icon:'🔬',title:'Advanced & Alternative',s:[
+{id:'dispersion',n:'Dispersion Trading',tags:[['arb','a'],['neutral','n']],out:'Short index vol, long individual stock vol',sum:'Index implied vol is systematically higher than what individual stock vols imply for the index (correlation risk premium). Sell index straddles, buy component straddles. Profit from this overpricing.',steps:['Compute theoretical index vol from constituent implied vols and historical correlations','Compare to actual index implied vol (VIX / SPX options)','Index implied vol is usually higher → correlation risk premium','Short index straddle, long weighted basket of single-stock straddles','Position sizes determined by market cap weights in the index'],ex:'<strong>Example:</strong> SPX VIX = 25. Theoretical vol from S&P 500 component stocks = 18 (stocks do not all move together perfectly — diversification within the index). Sell SPX straddle at 25 vol, buy 50 largest component straddles at avg 18 vol. Profit ≈ 7 vol points × Vega − transaction costs. Risk: if a market shock causes correlations to spike (as in 2008 or March 2020), both legs lose money simultaneously.',met:{Edge:'Index implied vol > theoretical vol',Exposure:'Short correlation risk premium',Risk:'Correlation spike (2008, March 2020)',TypicalSetup:'Short SPX straddle + long stock straddles'},chart:{t:'bar',lbs:['Index Implied Vol','Theoretical Stock Vol','Dispersion Premium'],vs:[25,18,7],cs:['#C0392B','#1E2761','#1a9e5c'],ti:'Dispersion Trade: Vol Comparison (% annualised)'},risk:6,rwd:5,bf:'Vol desk traders with access to single-stock options liquidity and correlation models'},
+{id:'conv-arb',n:'Convertible Arbitrage',tags:[['arb','a'],['neutral','n']],out:'Exploit mispricing of embedded equity option',sum:'Convertible bonds contain an embedded call option to convert into stock. Buy the convertible bond (cheap embedded option), short the stock to delta-hedge. Profit from the option mispricing.',steps:['Buy convertible bond = straight bond value + embedded call option on the stock','Short an equivalent number of shares to delta-hedge the equity exposure','If embedded call is priced below an equivalent listed option → you are buying vol cheaply','Earn: credit carry on bond + option mispricing capture as stock moves','Dynamically adjust delta hedge as stock price changes'],ex:'<strong>Example:</strong> Bond converts at $50/share. Stock at $40. Buy bond for $950 (face $1,000), short 20 shares at $40 (delta ≈ 0.5). If stock rises to $55: convertible bond gains ~$100, stock short loses ~$300, but embedded call gains more. The edge is buying the embedded option cheaper than its equivalent listed price. Long-term outperformance with careful hedging.',met:{Value:'Bond floor + call option value',Hedge:'Delta-neutral short stock position',Risk:'Credit risk + liquidity risk (bonds can be illiquid)',Return:'Typically 5–8% annually in normal markets'},chart:{t:'bar',lbs:['Bond Carry','Option Gain','Equity Hedge Cost','Net Return'],vs:[5.5,3.0,-2.0,6.5],cs:['#1E2761','#1a9e5c','#C0392B','#028090'],ti:'Convertible Arb Return Components (% annual)'},risk:4,rwd:5,bf:'Multi-strategy hedge funds with both credit market and equity options expertise'},
+{id:'distressed',n:'Distressed Debt',tags:[['gain','g2'],['event','m']],out:'Buy cheap — recover value through bankruptcy restructuring',sum:'Buy bonds of companies near or in bankruptcy at 20–60 cents on the dollar. Profit through restructuring, recovery of asset value, or unexpected turnaround. High risk, very illiquid, long time horizon.',steps:['Identify companies with deeply discounted bonds (trading below 80 cents on the dollar)','Analyse: asset value in bankruptcy, recovery rate, restructuring likelihood and timeline','Buy bonds at steep discount (e.g. 40 cents on dollar)','Become active participant in creditor committee during bankruptcy process','Receive new equity or restructured bonds worth significantly more than purchase price'],ex:'<strong>Example:</strong> Hertz bonds trading at 30 cents when it filed for bankruptcy in May 2020. Distressed investors bought heavily after analysing fleet asset values vs liabilities — cars were still worth money even if the company was insolvent. Hertz emerged from bankruptcy in 2021. Bonds recovered to 100 cents = 3.3× return in ~18 months. Many distressed situations recover far less — rigorous analysis is essential.',met:{Entry:'Bonds below 80 cents on dollar',Holding:'1–3+ years (illiquid)',Liquidity:'Very illiquid — specialist OTC market',Expertise:'Deep legal, accounting, restructuring knowledge required'},chart:{t:'bar',lbs:['Full Recovery (100c)','Partial (60c)','Further Decline','Total Wipeout'],vs:[30,40,20,10],cs:['#1a9e5c','#7ab87a','#C0392B','#8B0000'],ti:'Distressed Debt: Historical Outcome Distribution (%)'},risk:8,rwd:8,bf:'Specialist hedge funds with deep legal and restructuring expertise and long capital lockup tolerance'},
+{id:'global-macro',n:'Global Macro',tags:[['gain','g2'],['systematic','a']],out:'Trade currencies, bonds, and equities using macro analysis',sum:'Top-down strategy. Use economic indicators (inflation, growth, central bank policy) to take directional positions across currencies, interest rates, equities, and commodities globally.',steps:['Analyse the macro cycle: GDP growth, inflation, employment, and central bank signals','Determine the policy direction for each major central bank (Fed, ECB, BoJ, etc.)','Rising rates in a country → short local bonds, potentially long local currency','Falling growth → buy bonds, short equities, long safe-haven currencies (USD, JPY, CHF)','Diversify across multiple countries and asset classes — hold a portfolio of macro themes'],ex:'<strong>Example:</strong> 2021–2022: Fed signals aggressive rate hikes to fight 8% inflation. Global macro playbook: (1) Short long-dated US Treasuries — rates rising means bond prices fall. (2) Long USD — rate hikes attract capital inflows. (3) Short high-duration tech stocks — most sensitive to higher discount rates. All three positions worked as the Fed raised rates from 0% to 5.25% in 18 months.',met:{Instruments:'Bonds, FX, equities, commodities',TimeHorizon:'Months to years',Leverage:'Often 3–10× notional',Pioneers:'Soros, Druckenmiller, Dalio'},chart:{t:'bar',lbs:['Rising Rates','Falling Rates','Risk-On','Risk-Off'],vs:[-12,15,8,-5],cs:['#C0392B','#1a9e5c','#1a9e5c','#C0392B'],ti:'10-Year Bond P&L by Macro Regime (%)'},risk:7,rwd:8,bf:'Macro-savvy investors with deep central bank knowledge and high tolerance for drawdowns'}
+]}
+];
+
+// flat list
+var flat=[];
+D.forEach(function(ch){ch.s.forEach(function(s){flat.push(Object.assign({},s,{chId:ch.id,chT:ch.title,chI:ch.icon}));});});
+
+// tag class map
+var TC={i:'ti',b:'tb',r:'tr',n:'tn',g2:'tg2',h:'th',a:'ta',m:'tm'};
+
+// sidebar
+function buildSB(){
+  var sb=document.getElementById('sb');
+  sb.innerHTML=D.map(function(ch){
+    return '<div class="cg" id="G'+ch.id+'">'
+      +'<div class="ch" onclick="tg(\''+ch.id+'\')">'
+      +'<span class="ci">'+ch.icon+'</span>'
+      +'<span class="cl">'+ch.title+'</span>'
+      +'<span class="cc">'+ch.s.length+'</span>'
+      +'<span class="ca">&#8250;</span>'
+      +'</div>'
+      +'<div class="sl">'+ch.s.map(function(s){
+        return '<div class="st" id="S'+s.id+'" onclick="show(\''+s.id+'\')">'+s.n+'</div>';
+      }).join('')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function tg(id){
+  var g=document.getElementById('G'+id);
+  if(g) g.classList.toggle('op');
+}
+
+// welcome
+function buildWV(){
+  var wv=document.getElementById('wv');
+  var stats='<div class="ws"><div class="wb"><div class="wn">151</div><div class="wl">Strategies</div></div><div class="wb"><div class="wn">20</div><div class="wl">Asset Classes</div></div><div class="wb"><div class="wn">550+</div><div class="wl">Formulas</div></div><div class="wb"><div class="wn">2018</div><div class="wl">Published</div></div></div>';
+  var grid='<div class="cg2">'+D.map(function(ch){
+    return '<div class="ck" onclick="opCh(\''+ch.id+'\')">'
+      +'<div class="ki">'+ch.icon+'</div>'
+      +'<div class="kt">'+ch.title+'</div>'
+      +'<div class="kc">'+ch.s.length+' strategies — click to explore</div>'
+      +'</div>';
+  }).join('')+'</div>';
+  wv.innerHTML='<h1>151 <span>Trading Strategies</span></h1>'
+    +'<p>An interactive guide to every major strategy across 20 asset classes — plain English, interactive charts, real examples. Click any chapter below or use the sidebar to navigate.</p>'
+    +stats+grid;
+}
+
+function opCh(id){
+  var g=document.getElementById('G'+id);
+  if(g&&!g.classList.contains('op')) g.classList.add('op');
+  var ch=D.find(function(c){return c.id===id;});
+  if(ch) show(ch.s[0].id);
+}
+
+// show strategy
+function show(id){
+  var s=flat.find(function(x){return x.id===id;});
+  if(!s) return;
+
+  document.getElementById('wv').style.display='none';
+  var sv=document.getElementById('sv');
+  sv.className='vis'; // ensure show class
+
+  document.querySelectorAll('.st').forEach(function(e){e.classList.remove('ac');});
+  var si=document.getElementById('S'+id);
+  if(si){si.classList.add('ac');si.scrollIntoView({block:'nearest'});}
+
+  var g=document.getElementById('G'+s.chId);
+  if(g&&!g.classList.contains('op')) g.classList.add('op');
+
+  var tags=s.tags.map(function(t){return '<span class="'+(TC[t[1]]||'tn')+'">'+t[0]+'</span>';}).join('');
+  var steps='<ol class="sp">'+s.steps.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>';
+  var mets='<div class="mt">'+Object.entries(s.met).map(function(kv){return '<div class="mi"><div class="ml">'+kv[0]+'</div><div class="mv">'+kv[1]+'</div></div>';}).join('')+'</div>';
+  var idx=flat.findIndex(function(x){return x.id===id;});
+  var prv=flat[idx-1];var nxt=flat[idx+1];
+
+  sv.innerHTML=
+    '<div class="sh"><div class="sl2">'+s.chI+' '+s.chT+'</div><div class="sti">'+s.n+'</div><div class="tg">'+tags+'</div></div>'
+    +'<div class="cd2">'
+    +'<div class="cd cf"><h3>📋 What Is It?</h3><div class="tx">'+s.sum+'<div class="hl"><strong>Market Outlook:</strong> '+s.out+'</div></div></div>'
+    +'<div class="cd"><h3>🔢 How It Works</h3>'+steps+'</div>'
+    +'<div class="cd"><h3>📊 Chart</h3><div class="cw"><canvas id="MC"></canvas></div></div>'
+    +'<div class="cd"><h3>⚖️ Key Metrics</h3>'+mets
+    +'<div class="rb"><div class="rl"><span>Risk Level</span><span>'+s.risk+'/10</span></div><div class="rr"><div class="rf r1" style="width:'+s.risk*10+'%"></div></div>'
+    +'<div class="rl"><span>Potential Reward</span><span>'+s.rwd+'/10</span></div><div class="rr"><div class="rf r2" style="width:'+s.rwd*10+'%"></div></div></div></div>'
+    +'<div class="cd cf"><h3>💡 Real-World Example</h3><div class="ex">'+s.ex+'</div></div>'
+    +'<div class="cd cf"><h3>🎯 Best For</h3><div class="tx">'+s.bf+'</div></div>'
+    +'</div>'
+    +'<div class="nv">'
+    +'<button class="bn bs2" '+(prv?'onclick="show(\''+prv.id+'\')"':'disabled')+'>&#8592; '+(prv?prv.n:'Start')+'</button>'
+    +'<button class="bn bp" '+(nxt?'onclick="show(\''+nxt.id+'\')"':'disabled')+'>'+(nxt?'Next: '+nxt.n:'End')+' &#8594;</button>'
+    +'</div>';
+
+  drawC(s);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// chart renderer
+function drawC(s){
+  var cv=document.getElementById('MC');
+  if(!cv) return;
+  var ctx=cv.getContext('2d');
+  var W=cv.parentElement.offsetWidth||460;
+  var H=210;
+  cv.width=W; cv.height=H;
+  ctx.clearRect(0,0,W,H);
+
+  var ch=s.chart;
+  if(!ch) return;
+  var PT={t:28,r:14,b:36,l:48};
+  var cW=W-PT.l-PT.r, cH=H-PT.t-PT.b;
+
+  function tx(i,n){return PT.l+i/(n-1)*cW;}
+  function ty(v,mn,mx){return PT.t+cH-(v-mn)/(mx-mn)*cH;}
+
+  if(ch.t==='pay'){
+    var ps=[]; for(var p=60;p<=140;p++) ps.push(p);
+    var ys=ps.map(ch.fn);
+    var mn=Math.min.apply(null,ys)-2, mx=Math.max.apply(null,ys)+2;
+    var z=ty(0,mn,mx);
+    // grid lines
+    ctx.strokeStyle='rgba(0,0,0,.07)'; ctx.lineWidth=1;
+    for(var gv=-20;gv<=20;gv+=5){
+      if(gv>=mn&&gv<=mx){var gy=ty(gv,mn,mx);ctx.beginPath();ctx.moveTo(PT.l,gy);ctx.lineTo(W-PT.r,gy);ctx.stroke();}
+    }
+    // zero line
+    ctx.strokeStyle='rgba(100,116,155,.4)'; ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(PT.l,z);ctx.lineTo(W-PT.r,z);ctx.stroke();
+    ctx.setLineDash([]);
+    // fill
+    ctx.beginPath();
+    ps.forEach(function(p,i){var x=PT.l+i/(ps.length-1)*cW,y=ty(ys[i],mn,mx);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.lineTo(W-PT.r,z);ctx.lineTo(PT.l,z);ctx.closePath();
+    ctx.fillStyle='rgba(30,39,97,.07)';ctx.fill();
+    // line
+    ctx.beginPath();ctx.strokeStyle='#1E2761';ctx.lineWidth=2.5;
+    ps.forEach(function(p,i){var x=PT.l+i/(ps.length-1)*cW,y=ty(ys[i],mn,mx);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.stroke();
+    // x axis labels
+    ctx.fillStyle='#64749B';ctx.font='10px monospace';ctx.textAlign='center';
+    [70,80,90,100,110,120,130].forEach(function(v){ctx.fillText(v,PT.l+(v-60)/80*cW,H-PT.b+13);});
+    // y axis labels
+    ctx.textAlign='right';
+    for(var v2=-20;v2<=20;v2+=5){if(v2>=mn&&v2<=mx) ctx.fillText(v2,PT.l-4,ty(v2,mn,mx)+4);}
+    // axis titles
+    ctx.fillStyle='#64749B';ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText('Stock Price at Expiry',PT.l+cW/2,H-2);
+    ctx.save();ctx.translate(11,PT.t+cH/2);ctx.rotate(-Math.PI/2);ctx.fillText('P&L',0,0);ctx.restore();
+    ctx.fillStyle='#1E2761';ctx.font='bold 10px system-ui';
+    ctx.fillText('Payoff Diagram at Expiry',PT.l+cW/2,15);
+
+  } else if(ch.t==='bar'){
+    var vs=ch.vs, lbs=ch.lbs, cs=ch.cs;
+    var mn=Math.min(0,Math.min.apply(null,vs))-.5, mx=Math.max(0,Math.max.apply(null,vs))+.5;
+    var n=vs.length, bw=Math.min(48,cW/n*.62), gap=(cW-bw*n)/(n+1);
+    var z=ty(0,mn,mx);
+    // grid
+    ctx.strokeStyle='rgba(0,0,0,.07)';ctx.lineWidth=1;
+    for(var gv2=Math.ceil(mn);gv2<=mx;gv2++){
+      if(gv2===0) continue;
+      var gy2=ty(gv2,mn,mx);ctx.beginPath();ctx.moveTo(PT.l,gy2);ctx.lineTo(W-PT.r,gy2);ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(100,116,155,.5)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(PT.l,z);ctx.lineTo(W-PT.r,z);ctx.stroke();
+    // bars
+    vs.forEach(function(v,i){
+      var x=PT.l+gap+i*(bw+gap);
+      var bH=Math.abs(ty(v,mn,mx)-z);
+      var y=v>=0?z-bH:z;
+      ctx.fillStyle=cs[i]||'#1E2761';
+      var r=Math.min(4,bH/2);
+      ctx.beginPath();
+      if(v>=0){ctx.moveTo(x+r,y);ctx.lineTo(x+bw-r,y);ctx.quadraticCurveTo(x+bw,y,x+bw,y+r);ctx.lineTo(x+bw,y+bH);ctx.lineTo(x,y+bH);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);}
+      else{ctx.moveTo(x,y);ctx.lineTo(x+bw,y);ctx.lineTo(x+bw,y+bH-r);ctx.quadraticCurveTo(x+bw,y+bH,x+bw-r,y+bH);ctx.lineTo(x+r,y+bH);ctx.quadraticCurveTo(x,y+bH,x,y+bH-r);ctx.lineTo(x,y);}
+      ctx.closePath();ctx.fill();
+      ctx.fillStyle='#1A1A2E';ctx.font='bold 9px monospace';ctx.textAlign='center';
+      ctx.fillText((v>0?'+':'')+v, x+bw/2, v>=0?y-4:y+bH+11);
+      ctx.fillStyle='#64749B';ctx.font='9px system-ui';
+      var lb=lbs[i]||'';if(lb.length>9) lb=lb.slice(0,9)+'…';
+      ctx.fillText(lb,x+bw/2,H-PT.b+13);
+    });
+    ctx.fillStyle='#1E2761';ctx.font='bold 10px system-ui';ctx.textAlign='center';
+    ctx.fillText(ch.ti||'',PT.l+cW/2,14);
+
+  } else if(ch.t==='line'){
+    var ss=ch.ss, lbs=ch.lbs;
+    var allV=[];ss.forEach(function(sr){sr.d.forEach(function(v){if(v!=null) allV.push(v);});});
+    var mn=Math.min.apply(null,allV)-2, mx=Math.max.apply(null,allV)+2;
+    var n=lbs.length;
+    // grid
+    ctx.strokeStyle='rgba(0,0,0,.07)';ctx.lineWidth=1;
+    var stp=Math.ceil((mx-mn)/5);
+    for(var gv3=Math.ceil(mn);gv3<=mx;gv3+=Math.max(stp,1)){
+      var gy3=ty(gv3,mn,mx);ctx.beginPath();ctx.moveTo(PT.l,gy3);ctx.lineTo(W-PT.r,gy3);ctx.stroke();
+      ctx.fillStyle='#64749B';ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText(gv3,PT.l-3,gy3+3);
+    }
+    // series
+    ss.forEach(function(sr){
+      ctx.beginPath();ctx.strokeStyle=sr.c||'#1E2761';ctx.lineWidth=2.2;
+      var st=false;
+      sr.d.forEach(function(v,i){
+        if(v==null){st=false;return;}
+        var x=tx(i,n),y=ty(v,mn,mx);
+        if(!st){ctx.moveTo(x,y);st=true;}else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      ctx.fillStyle=sr.c||'#1E2761';
+      sr.d.forEach(function(v,i){
+        if(v==null) return;
+        ctx.beginPath();ctx.arc(tx(i,n),ty(v,mn,mx),2.5,0,Math.PI*2);ctx.fill();
+      });
+    });
+    // x labels
+    ctx.fillStyle='#64749B';ctx.font='9px system-ui';ctx.textAlign='center';
+    lbs.forEach(function(l,i){ctx.fillText(l,tx(i,n),H-PT.b+13);});
+    // legend
+    var lx=PT.l;
+    ss.forEach(function(sr){
+      ctx.fillStyle=sr.c||'#1E2761';ctx.fillRect(lx,8,12,7);
+      ctx.fillStyle='#64749B';ctx.font='9px system-ui';ctx.textAlign='left';ctx.fillText(sr.l,lx+15,15);
+      lx+=sr.l.length*6+22;
+    });
+    ctx.fillStyle='#1E2761';ctx.font='bold 10px system-ui';ctx.textAlign='center';
+    ctx.fillText(ch.ti||'',PT.l+cW/2,H-2);
+  }
+}
+
+// search
+var sqEl=document.getElementById('sq');
+var srEl=document.getElementById('sr');
+sqEl.addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  if(q.length<2){srEl.classList.remove('vis');return;}
+  var m=flat.filter(function(s){return s.n.toLowerCase().includes(q)||s.sum.toLowerCase().includes(q)||s.chT.toLowerCase().includes(q);}).slice(0,10);
+  if(!m.length){srEl.classList.remove('vis');return;}
+  srEl.innerHTML=m.map(function(s){
+    return '<div class="ri" onclick="show(\''+s.id+'\');sqEl.value=\'\';srEl.classList.remove(\'vis\')">'
+      +'<div class="rn">'+s.n+'</div><div class="rc">'+s.chI+' '+s.chT+'</div></div>';
+  }).join('');
+  srEl.classList.add('vis');
+});
+document.addEventListener('click',function(e){if(!e.target.closest('#sw')) srEl.classList.remove('vis');});
+
+// init
+buildSB();
+buildWV();
+</script>
+</body>
+</html>
